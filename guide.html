@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <title>ETH(Custom) Admin Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .guide {
+      background: rgba(40, 44, 52, 0.9);
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .guide h2 {
+      margin-top: 30px;
+      color: #00ffcc;
+      border-bottom: 2px solid #00ffcc;
+      padding-bottom: 8px;
+    }
+
+    .guide h3 {
+      color: #fff;
+      margin-top: 20px;
+    }
+
+    .guide a {
+      color: #00ffcc;
+    }
+
+    .kbd {
+      padding: 2px 6px;
+      border: 1px solid #555;
+      border-radius: 4px;
+      font-family: monospace;
+      background: #333;
+    }
+
+    ul li {
+      margin: 6px 0;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .network-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+
+    .network-table th,
+    .network-table td {
+      border: 1px solid #555;
+      padding: 10px;
+      text-align: left;
+    }
+
+    .network-table th {
+      background: rgba(0, 255, 204, 0.1);
+    }
+
+    .polygon-badge {
+      background: #8247E5;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    .sepolia-badge {
+      background: #ffc107;
+      color: #000;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    .code-block {
+      background: #1a1a2e;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 15px;
+      font-family: monospace;
+      font-size: 13px;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header class="main-header" style="display:flex;justify-content:space-between;align-items:center;">
+      <h1>📖 ETH(Custom) Admin 사용 가이드</h1>
+      <nav><a class="btn-secondary" href="./index.html"
+          style="text-decoration:none;padding:10px 14px;border-radius:8px;">⬅ 대시보드로</a></nav>
+    </header>
+
+    <section class="guide">
+      <h2>1) 준비물</h2>
+      <ul>
+        <li>브라우저 + MetaMask</li>
+        <li>네트워크 선택:
+          <ul style="margin-top:5px;padding-left:20px;">
+            <li><span class="polygon-badge">Polygon Mainnet</span> - 실제 운영 네트워크 (Chain ID: 137)</li>
+            <li><span class="sepolia-badge">Sepolia Testnet</span> - 테스트용 네트워크 (Chain ID: 11155111)</li>
+          </ul>
+        </li>
+        <li>컨트랙트 주소 (각 네트워크별로 다름)</li>
+        <li>충분한 네이티브 토큰 (가스비용)
+          <ul style="margin-top:5px;padding-left:20px;">
+            <li>Polygon: POL (MATIC)</li>
+            <li>Sepolia: SepoliaETH (테스트용 무료 획득 가능)</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>2) 네트워크 설정</h2>
+
+      <h3>📍 Polygon Mainnet (메인넷)</h3>
+      <table class="network-table">
+        <tr>
+          <th>항목</th>
+          <th>값</th>
+        </tr>
+        <tr>
+          <td>네트워크 이름</td>
+          <td>Polygon Mainnet</td>
+        </tr>
+        <tr>
+          <td>Chain ID</td>
+          <td>137</td>
+        </tr>
+        <tr>
+          <td>RPC URL</td>
+          <td>https://polygon-rpc.com/</td>
+        </tr>
+        <tr>
+          <td>통화 기호</td>
+          <td>POL (MATIC)</td>
+        </tr>
+        <tr>
+          <td>블록 탐색기</td>
+          <td><a href="https://polygonscan.com" target="_blank">polygonscan.com</a></td>
+        </tr>
+        <tr>
+          <td>가스비</td>
+          <td>실제 비용 발생 (약 $0.01~$0.10)</td>
+        </tr>
+      </table>
+
+      <h3>🧪 Sepolia Testnet (테스트넷)</h3>
+      <table class="network-table">
+        <tr>
+          <th>항목</th>
+          <th>값</th>
+        </tr>
+        <tr>
+          <td>네트워크 이름</td>
+          <td>Sepolia Testnet</td>
+        </tr>
+        <tr>
+          <td>Chain ID</td>
+          <td>11155111</td>
+        </tr>
+        <tr>
+          <td>RPC URL</td>
+          <td>https://rpc.sepolia.org/</td>
+        </tr>
+        <tr>
+          <td>통화 기호</td>
+          <td>ETH (SepoliaETH)</td>
+        </tr>
+        <tr>
+          <td>블록 탐색기</td>
+          <td><a href="https://sepolia.etherscan.io" target="_blank">sepolia.etherscan.io</a></td>
+        </tr>
+        <tr>
+          <td>가스비</td>
+          <td>무료 (테스트용)</td>
+        </tr>
+        <tr>
+          <td>Faucet</td>
+          <td><a href="https://sepoliafaucet.com" target="_blank">sepoliafaucet.com</a></td>
+        </tr>
+      </table>
+
+      <h2>3) 초기 설정</h2>
+      <ol>
+        <li><span class="kbd">smartcontract.js</span>에 <b>각 네트워크별 컨트랙트 주소</b>를 입력합니다:
+          <div class="code-block">
+            // Polygon Mainnet 컨트랙트 주소<br>
+            const CONTRACT_ADDRESS_POLYGON = "0x여기에_폴리곤_주소";<br><br>
+            // Sepolia Testnet 컨트랙트 주소<br>
+            const CONTRACT_ADDRESS_SEPOLIA = "0x여기에_세폴리아_주소";
+          </div>
+        </li>
+        <li>대시보드에서 원하는 <b>네트워크 선택</b> → <b>지갑 연결</b></li>
+        <li>권한 레벨이 <code>OWNER</code>인지 확인</li>
+      </ol>
+
+      <h2>4) 멀티 전송 기능 🚀</h2>
+
+      <div style="background:rgba(0,255,204,0.1);border:2px solid #00ffcc;padding:20px;border-radius:8px;margin:15px 0;">
+        <h3 style="margin-top:0;color:#00ffcc;">✨ 새로운 멀티 전송 기능!</h3>
+        <p>최대 <strong>300개</strong>의 주소에 <strong>한 트랜잭션</strong>으로 토큰을 전송할 수 있습니다.</p>
+      </div>
+
+      <h3>📋 개별 수량 전송 (multiTransfer)</h3>
+      <p>각 주소에 다른 금액을 전송할 때 사용합니다.</p>
+      <div class="code-block">
+        입력 형식 (한 줄에 하나씩):<br><br>
+        0x1234567890abcdef...,100<br>
+        0xabcdef1234567890...,250.5<br>
+        0x9876543210fedcba... 75
+      </div>
+      <ul>
+        <li>쉼표(,) 또는 공백으로 주소와 수량 구분</li>
+        <li>소수점 입력 가능</li>
+        <li>미리보기 버튼으로 검증 후 실행</li>
+      </ul>
+
+      <h3>💰 가스비 예상</h3>
+      <table class="network-table">
+        <tr>
+          <th>수신자 수</th>
+          <th>예상 가스</th>
+          <th>Polygon 비용 (대략)</th>
+        </tr>
+        <tr>
+          <td>50명</td>
+          <td>~1,500,000 gas</td>
+          <td>~$0.05</td>
+        </tr>
+        <tr>
+          <td>100명</td>
+          <td>~2,500,000 gas</td>
+          <td>~$0.10</td>
+        </tr>
+        <tr>
+          <td>200명</td>
+          <td>~5,000,000 gas</td>
+          <td>~$0.20</td>
+        </tr>
+        <tr>
+          <td>300명</td>
+          <td>~7,500,000 gas</td>
+          <td>~$0.30</td>
+        </tr>
+      </table>
+
+      <h3>⚠️ 멀티 전송 주의사항</h3>
+      <ul>
+        <li><strong>락업된 토큰은 전송 불가</strong> - 잠금 해제된 잔액 내에서만 전송 가능</li>
+        <li><strong>최대 300명</strong> - 그 이상은 여러 번 나눠서 전송</li>
+        <li><strong>수량 0 불가</strong> - 모든 항목에 0보다 큰 수량 필요</li>
+        <li><strong>미리보기 필수</strong> - 실행 전 반드시 미리보기로 검증</li>
+        <li><strong>충분한 가스비</strong> - POL/ETH를 넉넉히 준비</li>
+      </ul>
+
+      <h2>5) Lockup 관리</h2>
+
+      <h3 style="color:#ff6b6b;">⚠️ 매우 중요: 락업은 "덮어쓰기" 방식입니다!</h3>
+      <div
+        style="background:rgba(255,107,107,0.1);border:2px solid #ff6b6b;padding:15px;border-radius:8px;margin:15px 0;">
+        <p><strong>setLockup()과 decreaseLockAmount()는 기존 값을 완전히 새로운 값으로 교체합니다!</strong></p>
+        <ul style="margin-top:10px;">
+          <li><strong>setLockup()</strong>: 완전히 새로운 락업으로 교체</li>
+          <li><strong>decreaseLockAmount()</strong>: 새로운 수량으로 교체 (현재보다 작아야 함)</li>
+          <li><strong>releaseLockup()</strong>: 입력한 수량만큼 차감 (유일하게 빼기 방식)</li>
+          <li><strong>extendLockup()</strong>: 시간만 추가 (수량 불변, 만료 전에만 가능)</li>
+        </ul>
+      </div>
+
+      <h3>💡 락업 시간 예시</h3>
+      <table class="network-table">
+        <tr>
+          <th>기간</th>
+          <th>분(Minutes)</th>
+          <th>용도</th>
+        </tr>
+        <tr>
+          <td>1시간</td>
+          <td>60</td>
+          <td>테스트용</td>
+        </tr>
+        <tr>
+          <td>1일</td>
+          <td>1,440</td>
+          <td>단기 락업</td>
+        </tr>
+        <tr>
+          <td>1주일</td>
+          <td>10,080</td>
+          <td>주간 베스팅</td>
+        </tr>
+        <tr>
+          <td>1개월</td>
+          <td>43,200</td>
+          <td>월간 베스팅</td>
+        </tr>
+        <tr>
+          <td>1년</td>
+          <td>525,600</td>
+          <td>장기 베스팅</td>
+        </tr>
+      </table>
+
+      <h2>6) 토큰 전송</h2>
+      <ul>
+        <li><strong>단일 전송</strong>: 한 주소에 토큰 전송</li>
+        <li><strong>멀티 전송</strong>: 최대 300개 주소에 한 번에 전송</li>
+        <li>락업된 토큰은 전송할 수 없습니다</li>
+      </ul>
+
+      <h2>7) 토큰 소각</h2>
+      <ul>
+        <li>자신의 토큰을 영구적으로 제거합니다</li>
+        <li>소각된 토큰은 복구할 수 없습니다</li>
+        <li>총 공급량이 감소합니다</li>
+      </ul>
+
+      <h2>8) 오류 해결</h2>
+      <ul>
+        <li><b>"InsufficientUnlockedBalance"</b>
+          <ul style="margin-top:8px;">
+            <li>원인: 잠금 해제된 잔액이 부족</li>
+            <li>해결: 락업 상태 확인 후 전송 가능한 수량 내에서 전송</li>
+          </ul>
+        </li>
+        <li><b>"TooManyRecipients"</b>
+          <ul style="margin-top:8px;">
+            <li>원인: 멀티 전송 수신자가 300명 초과</li>
+            <li>해결: 300명 이하로 나눠서 전송</li>
+          </ul>
+        </li>
+        <li><b>"ArrayLengthMismatch"</b>
+          <ul style="margin-top:8px;">
+            <li>원인: 주소와 수량 개수가 다름</li>
+            <li>해결: 미리보기로 입력 형식 확인</li>
+          </ul>
+        </li>
+        <li><b>"컨트랙트를 찾을 수 없습니다"</b>
+          <ul style="margin-top:8px;">
+            <li>원인: 네트워크와 컨트랙트 주소 불일치</li>
+            <li>해결: smartcontract.js에서 해당 네트워크의 주소 확인</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>9) 보안 권장사항</h2>
+      <ul>
+        <li>Owner 권한은 최소한으로 관리하세요</li>
+        <li>중요한 작업은 하드웨어 월렛 권장</li>
+        <li>컨트랙트 주소를 항상 재확인하세요</li>
+        <li><strong>테스트넷(Sepolia)에서 먼저 테스트</strong> 후 메인넷 사용</li>
+        <li>멀티 전송 전 반드시 미리보기로 검증</li>
+        <li>대량 작업 전 소량으로 먼저 테스트</li>
+      </ul>
+
+      <h2>10) 주요 기능 요약</h2>
+      <table class="network-table">
+        <tr>
+          <th>기능</th>
+          <th>권한</th>
+          <th>가스비</th>
+        </tr>
+        <tr>
+          <td>일시정지/정상화</td>
+          <td>OWNER</td>
+          <td>○</td>
+        </tr>
+        <tr>
+          <td>락업 설정/연장/감소/해제</td>
+          <td>OWNER</td>
+          <td>○</td>
+        </tr>
+        <tr>
+          <td>락업 정보 조회</td>
+          <td>누구나</td>
+          <td>×</td>
+        </tr>
+        <tr>
+          <td>단일 토큰 전송</td>
+          <td>토큰 보유자</td>
+          <td>○</td>
+        </tr>
+        <tr>
+          <td style="color:#00ffcc;font-weight:bold;">멀티 전송 (NEW)</td>
+          <td>토큰 보유자</td>
+          <td>○</td>
+        </tr>
+        <tr>
+          <td>토큰 소각</td>
+          <td>토큰 보유자</td>
+          <td>○</td>
+        </tr>
+        <tr>
+          <td>잔액 조회</td>
+          <td>누구나</td>
+          <td>×</td>
+        </tr>
+      </table>
+
+      <h2>11) 유용한 링크</h2>
+      <ul>
+        <li><b>Polygon</b>
+          <ul>
+            <li>Explorer: <a href="https://polygonscan.com" target="_blank">polygonscan.com</a></li>
+            <li>Bridge: <a href="https://portal.polygon.technology/bridge" target="_blank">Polygon Bridge</a></li>
+            <li>Gas Tracker: <a href="https://polygonscan.com/gastracker" target="_blank">Gas Tracker</a></li>
+          </ul>
+        </li>
+        <li><b>Sepolia (테스트넷)</b>
+          <ul>
+            <li>Explorer: <a href="https://sepolia.etherscan.io" target="_blank">sepolia.etherscan.io</a></li>
+            <li>Faucet: <a href="https://sepoliafaucet.com" target="_blank">sepoliafaucet.com</a></li>
+            <li>Alchemy Faucet: <a href="https://sepoliafaucet.com" target="_blank">Alchemy Sepolia Faucet</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <div
+        style="background:rgba(0,255,204,0.1);border:2px solid #00ffcc;padding:20px;border-radius:8px;margin-top:30px;">
+        <h3 style="margin-top:0;color:#00ffcc;">💡 추천 워크플로우</h3>
+        <ol>
+          <li><strong>Sepolia 테스트넷</strong>에서 모든 기능 테스트</li>
+          <li>문제없이 작동하면 <strong>Polygon 메인넷</strong>으로 전환</li>
+          <li>메인넷에서 소량으로 테스트 전송</li>
+          <li>대량 작업 실행</li>
+        </ol>
+      </div>
+    </section>
+  </div>
+</body>
+
+</html>

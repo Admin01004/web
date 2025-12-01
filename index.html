@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <title>ETH(Custom) 관리자 - 토큰 관리 대시보드</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ETH(Custom) Token 관리 도구 – Polygon Mainnet / Sepolia Testnet 지원">
+  <!-- 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+  <!-- 프로젝트 파일 -->
+  <link rel="stylesheet" href="styles.css">
+  <script defer type="text/javascript" src="smartcontract.js"></script>
+  <script defer type="text/javascript" src="index.js"></script>
+
+  <script>
+    window.__TOKEN_LOGO_URL__ = "https://yoursite.com/logo.png";
+  </script>
+
+  <style>
+    /* 네트워크 선택 버튼 스타일 */
+    .network-selector {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .network-btn {
+      padding: 10px 20px;
+      border: 2px solid #555;
+      border-radius: 8px;
+      background: rgba(40, 44, 52, 0.9);
+      color: #b8b8b8;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .network-btn:hover {
+      border-color: #00ffcc;
+      color: #00ffcc;
+    }
+
+    .network-btn.active {
+      border-color: #00ffcc;
+      background: rgba(0, 255, 204, 0.15);
+      color: #00ffcc;
+    }
+
+    .network-btn.testnet {
+      border-color: #ffc107;
+    }
+
+    .network-btn.testnet.active {
+      border-color: #ffc107;
+      background: rgba(255, 193, 7, 0.15);
+      color: #ffc107;
+    }
+
+    .testnet-badge {
+      background: #ffc107;
+      color: #000;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.7em;
+      margin-left: 5px;
+    }
+
+    /* 멀티 전송 textarea */
+    .multi-transfer-input {
+      width: calc(100% - 20px);
+      min-height: 150px;
+      padding: 12px;
+      border: 1px solid #555;
+      border-radius: 6px;
+      background-color: #2a2a2a;
+      color: #e0e0e0;
+      font-family: monospace;
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    .multi-transfer-input:focus {
+      border-color: #00ffcc;
+      outline: none;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+    }
+
+    .multi-transfer-preview {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 3px solid #00ffcc;
+      margin-top: 10px;
+      color: #e0e0e0;
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- 헤더/네비 -->
+    <header class="main-header" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+      <div>
+        <h1>🪙 ETH(Custom) Token<br> 관리자 대시보드</h1>
+        <p class="subtitle">ETH(Custom) 토큰을 쉽고 안전하게 관리하세요</p>
+      </div>
+      <nav>
+        <a class="btn-secondary" href="./guide.html" target="_blank"
+          style="text-decoration:none;display:inline-block;padding:10px 14px;border-radius:8px;">📖 사용 가이드</a>
+      </nav>
+    </header>
+
+    <!-- 네트워크 선택 -->
+    <section class="wallet-section">
+      <h3 style="margin-top:0;color:#00ffcc;">🌐 네트워크 선택</h3>
+      <div class="network-selector">
+        <button class="network-btn active" data-chain-id="137" onclick="selectNetwork(137)">
+          <span style="color:#8247E5;">⬡</span> Polygon Mainnet
+        </button>
+        <button class="network-btn testnet" data-chain-id="11155111" onclick="selectNetwork(11155111)">
+          <span style="color:#ffc107;">◈</span> Sepolia Testnet
+          <span class="testnet-badge">테스트</span>
+        </button>
+      </div>
+
+      <div id="currentNetworkDisplay"
+        style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(0,255,204,0.1);border-radius:8px;border:1px solid #00ffcc;margin-bottom:15px;">
+        <span style="font-weight:600;color:#00ffcc;">🌐 네트워크:</span>
+        <span style="font-weight:700;color:#fff;">Polygon Mainnet</span>
+      </div>
+
+      <div class="wallet-connection" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button class="btn-connect-wallet" onclick="connectWallet()">🔗 지갑 연결 (MetaMask)</button>
+        <button class="btn-primary" onclick="addCustomToken()">➕ 메타마스크에 ETH(Custom) 토큰 추가</button>
+      </div>
+      <div class="connection-help">
+        <small>💡 MetaMask가 없다면 <a href="https://metamask.io" target="_blank">설치</a>하세요.</small>
+      </div>
+
+      <div class="wallet-info">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">🏠 지갑 주소:</span>
+            <span id="walletAddress" class="info-value">연결되지 않음</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">💰 네이티브 잔고:</span>
+            <span id="walletBalance" class="info-value">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">🪙 ETH(Custom) 보유:</span>
+            <span id="tokenBalance" class="info-value">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">🔑 권한 레벨:</span>
+            <span id="walletRole" class="wallet-role">연결되지 않음</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Explorer 바로가기 -->
+    <section class="category">
+      <h2 onclick="toggleCategory(this)" class="category-header">
+        🔍 Explorer 바로가기
+        <span class="toggle-icon">&#9662;</span>
+        <span class="category-desc">컨트랙트/토큰 트래커/홀더 보기</span>
+      </h2>
+      <div class="category-content">
+        <div class="explorer-links" style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="" id="explorerContract" target="_blank" class="btn-external">📄 컨트랙트 페이지</a>
+          <a href="" id="explorerTokenTracker" target="_blank" class="btn-external">🪙 토큰 트래커</a>
+          <a href="" id="explorerHoldAddress" target="_blank" class="btn-external">📊 홀더 랭킹</a>
+        </div>
+        <p class="note">📌 지갑 연결 후 정확한 링크가 생성됩니다.</p>
+      </div>
+    </section>
+
+    <!-- 컨트랙트 상태 -->
+    <section class="category">
+      <h2 onclick="toggleCategory(this)" class="category-header">
+        🧭 컨트랙트 상태
+        <span class="toggle-icon">&#9662;</span>
+        <span class="category-desc">현재 토큰 정보와 상태를 한눈에 확인</span>
+      </h2>
+      <div class="category-content">
+        <div class="form-group">
+          <button class="btn-secondary" onclick="loadContractState()">🔄 상태 새로고침</button>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">📛 토큰명:</span> <span id="st_name" class="info-value">-</span>
+          </div>
+          <div class="info-item"><span class="info-label">🔤 심볼:</span> <span id="st_symbol" class="info-value">-</span>
+          </div>
+          <div class="info-item"><span class="info-label">🔢 소수점:</span> <span id="st_decimals"
+              class="info-value">-</span></div>
+          <div class="info-item"><span class="info-label">📊 총 발행량:</span> <span id="st_totalSupply"
+              class="info-value">-</span></div>
+          <div class="info-item"><span class="info-label">⏸ 일시정지:</span> <span id="st_paused"
+              class="info-value">-</span></div>
+          <div class="info-item" style="grid-column: 1 / -1;">
+            <span class="info-label">👑 Owner:</span>
+            <span id="st_owner" class="info-value mono" style="word-break:break-all;">-</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:12px;">
+          <label class="form-label">⚡ 빠른 제어 <span class="required-badge">OWNER</span></label>
+          <div class="input-group" style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-warning owner-only" onclick="pauseToken()">⏸ 일시정지</button>
+            <button class="btn-secondary owner-only" onclick="unpauseToken()">▶ 정상화</button>
+          </div>
+          <small class="note">토큰 전송을 일시적으로 중지하거나 다시 활성화할 수 있습니다. 이상 상황 대응용으로만 사용하는 것을 권장합니다.</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- 멀티 전송 (NEW) -->
+    <section class="category">
+      <h2 onclick="toggleCategory(this)" class="category-header">
+        📤 멀티 전송
+        <span class="toggle-icon">&#9662;</span>
+        <span class="category-desc">최대 300명에게 한 번에 토큰 전송</span>
+      </h2>
+      <div class="category-content">
+        <div class="note" style="background:rgba(0,255,204,0.15);border-color:#00ffcc;margin-bottom:20px;">
+          <h4 style="margin-top:0;color:#00ffcc;">🚀 멀티 전송 기능</h4>
+          <p>최대 <strong>300개</strong>의 주소에 각각 다른 수량의 토큰을 <strong>한 트랜잭션</strong>으로 전송합니다.</p>
+          <ul style="margin:10px 0;padding-left:20px;">
+            <li>에어드랍, 대량 배포에 최적화</li>
+            <li>락업된 토큰은 전송 불가</li>
+            <li>가스비 절약 (개별 전송 대비 최대 80% 절약)</li>
+          </ul>
+        </div>
+
+        <!-- 동적 멀티 전송 입력 영역 -->
+        <div class="form-group">
+          <label class="form-label">📋 개별 수량 전송</label>
+          <p class="function-desc">각 줄마다 <strong>지갑 주소 + 전송 수량</strong>을 입력해 한 번에 멀티 전송을 실행합니다. 비워진 줄은 무시되며, 잘못된 주소나 0 이하
+            수량이 있는 줄이 있으면 전체 트랜잭션이 거절됩니다.</p>
+
+          <div id="multiTransferList"></div>
+
+          <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn-secondary" onclick="addTransferRow()">＋ 줄 추가</button>
+            <button class="btn-danger" onclick="removeTransferRow()">－ 줄 삭제</button>
+            <button class="btn-warning" onclick="generateBulkRows()">🔢 300개 자동 생성</button>
+            <div style="display:flex;gap:10px;margin-top:10px;align-items:center;">
+              <input 
+                type="number" 
+                id="rowCountInput" 
+                class="form-input" 
+                style="width:120px;" 
+                placeholder="줄 개수 입력 (예: 45)"
+                min="1" 
+                max="300"
+              >
+              <button class="btn-secondary" onclick="setRowsByNumber()">🔧 줄 개수 설정</button>
+            </div>
+          </div>
+
+          <button class="btn-success" style="margin-top:15px;" onclick="previewMultiTransferUI()">
+            🧐 미리보기
+          </button>
+
+          <pre id="multiTransferPreview" class="multi-transfer-preview" style="display:none;"></pre>
+
+          <button class="btn-primary owner-only" style="margin-top:10px;" onclick="executeMultiTransferUI()">
+            🚀 멀티 전송 실행
+          </button>
+          <small class="note">💡 전송 전에 반드시 미리보기로 총 전송 수량과 대상 주소를 다시 확인하세요. 잘못 전송된 토큰은 되돌릴 수 없습니다.</small>
+        </div>
+
+        <div class="note" style="margin-top:20px;">
+          <strong>💡 가스비 안내:</strong>
+          <ul style="margin:10px 0;padding-left:20px;">
+            <li>100명 전송: 약 2,000,000 ~ 3,000,000 gas</li>
+            <li>300명 전송: 약 6,000,000 ~ 8,000,000 gas</li>
+            <li>충분한 POL/ETH를 보유하세요</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lockup 관리 -->
+    <section class="category">
+      <h2 onclick="toggleCategory(this)" class="category-header">
+        🔒 Lockup 관리
+        <span class="toggle-icon">&#9662;</span>
+        <span class="category-desc">토큰 락업 설정/연장/감소/해제</span>
+      </h2>
+      <div class="category-content">
+        <div class="lockup-warning"
+          style="background:rgba(255,107,107,0.1);border-left:4px solid #ff6b6b;padding:15px;border-radius:6px;margin-bottom:20px;">
+          <h3 style="color:#ff6b6b;margin-top:0;">⚠️ 중요: 락업 설정 방식</h3>
+          <p style="margin:10px 0;"><strong>락업은 "덮어쓰기" 방식입니다!</strong></p>
+          <ul style="margin:10px 0;padding-left:20px;">
+            <li>기존 락업: <strong>1000 ETH(Custom)</strong></li>
+            <li>새로 설정: <strong>100 ETH(Custom)</strong> → 최종 결과: <strong>100 ETH(Custom)</strong> (❌ 1100 아님!)</li>
+            <li>즉, <code>setLockup()</code>은 기존 락업을 완전히 새로운 값으로 <strong>교체</strong>합니다.</li>
+          </ul>
+          <p style="margin:10px 0;color:#b8b8b8;">💡 수량을 늘리려면: <strong>기존 수량 + 추가 수량</strong>을 직접 계산해서 입력해야 합니다. (예: 1000 →
+            1100으로 변경)</p>
+        </div>
+
+        <p class="note">⚠ Owner만 락업을 관리할 수 있습니다. 락업된 토큰은 해당 기간 동안 전송이 불가능합니다.</p>
+
+        <!-- 락업 설정 -->
+        <div class="form-group">
+          <label class="form-label">🆕 새 락업 설정 (덮어쓰기) <span class="required-badge">OWNER</span></label>
+          <p class="function-desc">특정 주소의 토큰을 일정 기간 동안 잠급니다. <strong style="color:#ff6b6b;">기존 락업이 있다면 완전히 새로운 값으로
+              교체됩니다.</strong> 해당 주소는 락업 기간 동안 잠긴 수량만큼 전송할 수 없습니다.</p>
+          <input type="text" id="lockupAccount" placeholder="락업할 주소 (0x...)" class="form-input">
+          <input type="number" id="lockupMinutes" placeholder="락업 시간 (분, 정수만)" class="form-input" min="1" step="1">
+          <input type="number" id="lockupAmount" placeholder="락업 수량 (ETH(Custom), 소수점 가능)" class="form-input" min="0"
+            step="any">
+          <button class="btn-primary owner-only" onclick="setLockup()">락업 설정</button>
+          <small class="note">💡 예시: 100.5 ETH(Custom)를 1440분(1일) 동안 락업. 기존 락업이 있었다면 모두 삭제되고 새 값으로만 락업됩니다.</small>
+        </div>
+
+        <!-- 락업 연장 -->
+        <div class="form-group">
+          <label class="form-label">⏰ 락업 기간 연장 <span class="required-badge">OWNER</span></label>
+          <p class="function-desc">기존 락업의 만료 시간을 연장합니다. <strong>수량은 변경되지 않고 시간만 추가</strong>됩니다. 이미 만료된 락업은 연장할 수
+            없습니다.</p>
+          <input type="text" id="extendAccount" placeholder="주소 (0x...)" class="form-input">
+          <input type="number" id="extendMinutes" placeholder="추가 시간 (분, 정수만)" class="form-input" min="1" step="1">
+          <button class="btn-primary owner-only" onclick="extendLockup()">락업 연장</button>
+          <small class="note">💡 예시: 기존 락업에 720분(12시간)을 추가하여 만료 시점을 뒤로 미룹니다. 락업 수량은 그대로 유지됩니다.</small>
+        </div>
+
+        <!-- 락업 수량 감소 -->
+        <div class="form-group">
+          <label class="form-label">📉 락업 수량 감소 (새 수량으로 설정) <span class="required-badge">OWNER</span></label>
+          <p class="function-desc">
+            락업된 수량을 <strong>새로운 값으로 교체</strong>합니다.
+            <strong style="color:#ff6b6b;">현재 락업 수량보다 작은 값만 입력 가능하며, 기존 수량에서 빼는 개념이 아니라 "최종 락업 수량"을 재설정하는 방식입니다.</strong>
+            0을 입력하면 해당 주소의 락업이 완전히 해제됩니다.
+          </p>
+          <input type="text" id="decreaseAccount" placeholder="주소 (0x...)" class="form-input">
+          <input type="number" id="decreaseAmount" placeholder="새로운 수량 (ETH(Custom), 0이면 전체 해제)" class="form-input"
+            min="0" step="any">
+          <button class="btn-primary owner-only" onclick="decreaseLockAmount()">수량 감소</button>
+          <small class="note">💡 예시: 기존 1000 ETH(Custom) → 750.5 입력 → 최종 750.5 ETH(Custom) 락업 (기존 값에서 750.5를 빼는 것이
+            아님!)</small>
+        </div>
+
+        <!-- 락업 부분 해제 -->
+        <div class="form-group">
+          <label class="form-label">🔓 락업 부분 해제 (차감 방식) <span class="required-badge">OWNER</span></label>
+          <p class="function-desc">락업된 수량 중 일부만 즉시 해제합니다. <strong>입력한 수량만큼 기존 락업에서 차감</strong>되며, 나머지 수량은 계속 락업 상태로
+            남습니다.</p>
+          <input type="text" id="releaseAccount" placeholder="주소 (0x...)" class="form-input">
+          <input type="number" id="releaseAmount" placeholder="해제할 수량 (ETH(Custom))" class="form-input" min="0"
+            step="any">
+          <button class="btn-primary owner-only" onclick="releaseLockup()">부분 해제</button>
+          <small class="note">💡 예시: 락업 1000 ETH(Custom) 중 250.75 ETH(Custom)만 해제 → 남은 락업: 749.25 ETH(Custom)</small>
+        </div>
+
+        <!-- 만료된 락업 제거 -->
+        <div class="form-group">
+          <label class="form-label">🗑 만료된 락업 정보 제거 (선택사항) <span class="required-badge">OWNER</span></label>
+          <p class="function-desc">기간이 만료된 락업 정보를 컨트랙트에서 삭제합니다. <strong>만료된 락업은 이미 효력이 없으므로 이 작업은 필수가 아니며, 저장 공간 정리
+              용도</strong>입니다.</p>
+          <input type="text" id="clearAccount" placeholder="만료된 락업 주소 (0x...)" class="form-input">
+          <button class="btn-warning owner-only" onclick="clearExpiredLockup()">만료 락업 제거</button>
+          <small class="note">💡 락업 기간이 지난 주소를 입력하면, 저장소에서 해당 락업 정보를 제거해 컨트랙트를 조금 더 깔끔하게 유지할 수 있습니다.</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lockup 조회 -->
+    <section class="category">
+      <h2 onclick="toggleCategory(this)" class="category-header">
+        🔍 Lockup 조회
+        <span class="toggle-icon">&#9662;</span>
+        <span class="category-desc">락업 정보 및 사용 가능 잔액 확인</span>
+      </h2>
+      <div class="category-content">
+        <p class="note">누구나 조회 가능합니다. 가스비가 들지 않는 <strong>읽기 전용 함수</strong>입니다.</p>
+
+        <div class="form-group">
+          <label class="form-label">🔎 락업 정보 확인 (무료 조회)</label>
+          <p class="function-desc">특정 주소의 상세 락업 정보를 조회합니다. 현재 잠긴 수량, 남은 시간, 만료 시각을 한 번에 확인할 수 있습니다.</p>
+          <div class="input-group" style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input type="text" id="checkLockupAccount" placeholder="조회할 주소 (0x...)" class="form-input" style="flex:1;">
+            <button class="btn-secondary" onclick="checkLockupInfo()">조회</button>
+          </div>
+          <div id="lockupInfoResult" class="result-display"></div>
+          <small class="note">💡 락업 수량, 남은 시간, 만료 일시를 미리 확인하면 락업 해제 타이밍을 계획하기 좋습니다.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">✅ 사용 가능 잔액 확인 (무료 조회)</label>
+          <p class="function-desc">특정 주소의 전체 ETH(Custom) 잔액 중 <strong>실제로 전송 가능한 수량</strong>만 조회합니다.
+            <strong>전체 잔액 - 락업 수량 = 사용 가능 잔액</strong>입니다.
+          </p>
+          <div class="input-group" style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input type="text" id="checkUnlockedAccount" placeholder="조회할 주소 (0x...)" class="form-input"
+              style="flex:1;">
+            <button class="btn-secondary" onclick="checkUnlockedBalance()">조회</button>
+          </div>
+          <div id="unlockedBalanceResult" class="result-display"></div>
+          <small class="note">💡 전송 전에 사용 가능한 잔액을 미리 확인하면, "InsufficientUnlockedBalance" 같은 오류를 예방할 수 있습니다.</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- 토큰 소각 -->
+    <section class="category">
+      <h2 onclick="toggleCategory(this)" class="category-header">
+        🔥 토큰 소각
+        <span class="toggle-icon">&#9662;</span>
+        <span class="category-desc">보유한 ETH(Custom) 토큰 소각</span>
+      </h2>
+      <div class="category-content">
+        <p class="note">자신의 토큰을 영구적으로 소각합니다. 이 작업은 <strong style="color:#ff6b6b;">되돌릴 수 없습니다.</strong></p>
+        <div class="form-group">
+          <label class="form-label">🔥 토큰 소각 (영구 삭제)</label>
+          <p class="function-desc">보유한 ETH(Custom) 토큰을 영구적으로 제거합니다.
+            <strong style="color:#ff6b6b;">소각된 토큰은 절대 복구할 수 없으며, 총 공급량도 함께 감소합니다.</strong>
+          </p>
+          <input type="number" id="burnAmount" placeholder="소각 수량 (ETH(Custom), 소수점 가능)" class="form-input" min="0"
+            step="any">
+          <button class="btn-danger" onclick="burnToken()">소각 (복구 불가)</button>
+          <small class="note">⚠️ 예시: 99.99 ETH(Custom) 소각 → 본인 지갑 잔액과 전체 공급량이 동시에 99.99만큼 줄어듭니다.</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- 토큰 정보 조회 -->
+    <section class="category">
+      <h2 onclick="toggleCategory(this)" class="category-header">
+        📊 토큰 정보 조회
+        <span class="toggle-icon">&#9662;</span>
+        <span class="category-desc">주소별 토큰 잔액 확인</span>
+      </h2>
+      <div class="category-content">
+        <p class="note">컨트랙트에서 제공하는 읽기 전용 함수만 사용합니다. 가스가 들지 않습니다.</p>
+        <div class="form-group">
+          <label class="form-label">💰 토큰 잔액 조회 (무료)</label>
+          <p class="function-desc">특정 주소의 전체 ETH(Custom) 보유량을 조회합니다.
+            <strong>락업 여부와 관계없이 총 보유 수량</strong>만을 표시합니다.
+          </p>
+          <div class="input-group" style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input type="text" id="checkBalanceAccount" placeholder="조회할 주소 (0x...)" class="form-input" style="flex:1;">
+            <button class="btn-secondary" onclick="checkBalance()">조회</button>
+          </div>
+          <div id="balanceResult" class="result-display"></div>
+          <small class="note">💡 전체 잔액을 확인한 뒤, 필요하다면 Lockup 조회 메뉴에서 락업/사용 가능 잔액을 함께 확인하세요.</small>
+        </div>
+      </div>
+    </section>
+
+    <footer style="margin-top:32px;text-align:center;opacity:0.8;">
+      <small>© ETH(Custom) Token Admin • Polygon / Sepolia Dashboard</small>
+    </footer>
+  </div>
+
+  <script>
+    function toggleCategory(el) {
+      const content = el.parentElement.querySelector('.category-content');
+      const icon = el.querySelector('.toggle-icon');
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+        icon.innerHTML = '&#9662;';
+      } else {
+        content.style.display = 'block';
+        icon.innerHTML = '&#9652;';
+      }
+    }
+  </script>
+</body>
+
+</html>

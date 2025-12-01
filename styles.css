@@ -1,0 +1,464 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: rgba(36, 36, 36, 0.85);
+    box-shadow: 0 0 30px rgba(0, 255, 204, 0.2);
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    font-size: 2em;
+}
+
+.subtitle {
+    text-align: center;
+    color: #b8b8b8;
+    margin-bottom: 30px;
+    font-size: 0.9em;
+}
+
+/* ===== 지갑 연결 섹션 ===== */
+.wallet-section {
+    background: rgba(40, 44, 52, 0.9);
+    border: 1px solid #404040;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.wallet-connection {
+    margin-bottom: 15px;
+}
+
+.connection-help {
+    margin-bottom: 20px;
+    color: #b8b8b8;
+}
+
+.wallet-info {
+    margin-top: 20px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.info-item {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 3px solid #00ffcc;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #00ffcc;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.info-value {
+    color: #ffffff;
+    word-break: break-all;
+    font-size: 0.95em;
+}
+
+/* ===== 버튼 스타일 ===== */
+.btn-connect-wallet {
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-connect-wallet:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+}
+
+.btn-external {
+    display: inline-block;
+    background: rgba(0, 255, 204, 0.1);
+    color: #00ffcc;
+    padding: 12px 20px;
+    border: 1px solid #00ffcc;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s;
+    margin: 5px;
+}
+
+.btn-external:hover {
+    background: rgba(0, 255, 204, 0.2);
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background: #444 !important;
+    color: #888 !important;
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+button:disabled:hover {
+    transform: none !important;
+}
+
+/* ===== 카테고리 스타일 ===== */
+.category {
+    margin-bottom: 30px;
+}
+
+.category-header {
+    cursor: pointer;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(0, 255, 204, 0.1) 0%, rgba(0, 200, 160, 0.1) 100%);
+    border-radius: 8px;
+    transition: all 0.3s;
+    margin-bottom: 0;
+    color: #ffffff;
+    border: 1px solid rgba(0, 255, 204, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category-header:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 204, 0.2) 0%, rgba(0, 200, 160, 0.2) 100%);
+    border-color: rgba(0, 255, 204, 0.4);
+    transform: translateX(5px);
+}
+
+.toggle-icon {
+    margin-left: auto;
+    color: #00ffcc;
+    font-size: 1.2em;
+}
+
+.category-desc {
+    font-size: 0.85em;
+    color: #b8b8b8;
+    font-weight: 400;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.category-content {
+    padding: 20px;
+    border-left: 1px solid #404040;
+    border-right: 1px solid #404040;
+    border-bottom: 1px solid #404040;
+    border-radius: 0 0 8px 8px;
+    background: rgba(20, 20, 20, 0.5);
+    display: none;
+}
+
+/* ===== 폼 스타일 ===== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.form-input, select.form-input {
+    width: calc(100% - 20px);
+    padding: 12px;
+    border: 1px solid #555;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.form-input:focus, select.form-input:focus {
+    border-color: #00ffcc;
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+}
+
+.form-input::placeholder {
+    color: #888;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ===== 배지 스타일 ===== */
+.required-badge {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.free-badge {
+    background: linear-gradient(135deg, #00ffcc 0%, #00d4aa 100%);
+    color: #000;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* ===== 권한 스타일 ===== */
+.wallet-role {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.wallet-role.admin {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(238, 90, 111, 0.2) 100%);
+    border-left: 4px solid #ff6b6b;
+    color: #ff6b6b;
+}
+
+.wallet-role.normal {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid #ffffff;
+    color: #ffffff;
+}
+
+/* ===== 결과 표시 ===== */
+.result-display {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 3px solid #00ffcc;
+    margin-top: 10px;
+    color: #e0e0e0;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* ===== 노트 스타일 ===== */
+.note {
+    background: rgba(0, 255, 204, 0.1);
+    border-left: 3px solid #00ffcc;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 15px 0;
+    color: #b8b8b8;
+    font-size: 0.9em;
+}
+
+/* ===== BscScan 링크 ===== */
+.bscscan-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+/* ===== 유틸리티 ===== */
+.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* ===== 반응형 디자인 ===== */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .category-desc {
+        display: none;
+    }
+
+    .btn-connect-wallet {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    .form-input {
+        width: calc(100% - 20px);
+    }
+
+    .bscscan-links {
+        flex-direction: column;
+    }
+
+    .btn-external {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ===== 스크롤바 스타일 (다크 테마) ===== */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(40, 44, 52, 0.5);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00ffcc;
+}
+
+/* ===== 애니메이션 ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.category-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ===== 지갑 미연결 상태 ===== */
+.wallet-not-connected button:not(.btn-connect-wallet),
+.wallet-not-connected .btn-external {
+    position: relative;
+}
+
+.wallet-not-connected button:not(.btn-connect-wallet):hover::after,
+.wallet-not-connected .btn-external:hover::after {
+    content: "먼저 지갑을 연결하세요";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #00ffcc;
+    padding: 5px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 12px;
+    margin-bottom: 5px;
+    z-index: 1000;
+}
+
+.transfer-row input {
+  flex: 1;
+}
