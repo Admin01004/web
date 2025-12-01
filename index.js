@@ -1330,3 +1330,4 @@ async function addCustomToken() {
     alert("토큰 추가 실패: " + friendlyError(e));
   }
 }
+
