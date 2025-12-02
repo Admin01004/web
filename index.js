@@ -962,6 +962,7 @@ function previewMultiTransferUI() {
 
   const previewBox = document.getElementById("multiTransferPreview");
   if (!previewBox) return null;
+  previewBox.style.display = 'block';
 
   if (recipients.length === 0) {
     previewBox.innerHTML =
