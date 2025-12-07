@@ -1309,20 +1309,7 @@ async function addCustomToken() {
       return;
     }
 
-    // 모바일에서 현재 체인 확인
-    const currentChainId = await window.ethereum.request({
-      method: "eth_chainId"
-    });
-    const targetChainIdHex = getNetworkInfo().chainIdHex;
-
-    // 현재 체인이 목표 체인과 다르면 네트워크 전환
-    if (currentChainId !== targetChainIdHex) {
-      const switched = await switchNetwork(Network);
-      if (!switched) {
-        alert("먼저 네트워크를 전환해주세요.");
-        return;
-      }
-    }
+    await checkAndSwitchNetwork();
 
     const wasAdded = await window.ethereum.request({
       method: "wallet_watchAsset",
